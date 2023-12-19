@@ -4,19 +4,18 @@ import (
 	"fmt"
 )
 
-type Dict struct {
-	Mot        string
-	Definition string
+type Dictionary map[string]string
+
+func New() Dictionary {
+	return Dictionary{}
 }
 
-type Dictionary map[string]Dict
-
 func (d Dictionary) Add(mot, definition string) {
-	d[mot] = Dict{Mot: mot, Definition: definition}
+	d[mot] = definition
 }
 
 func (d Dictionary) Get(mot string) string {
-	return d[mot].Definition
+	return d[mot]
 }
 
 func (d Dictionary) Remove(mot string) {
@@ -30,10 +29,6 @@ func (d Dictionary) List() {
 	}
 
 	for _, mot := range mots {
-		fmt.Printf("%s: %s\n", mot, d[mot].Definition)
+		fmt.Printf("%s: %s\n", mot, d[mot])
 	}
-}
-
-func (d Dictionary) List2() {
-
 }

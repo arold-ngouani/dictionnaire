@@ -7,7 +7,7 @@ import (
 
 func main() {
 
-	dict := make(dictionary.Dictionary)
+	dict := dictionary.New()
 
 	dict.Add("v1", "premiere valeur")
 	dict.Add("v2", "seconde valeur")
