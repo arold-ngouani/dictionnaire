@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
-type Dictionary map[string]string
+type Dictionary map[string]int
 
-func (d Dictionary) Add(mot, definition string) {
-	d[mot] = definition
+func (d Dictionary) Add(mot string, valeur int) {
+	d[mot] = valeur
 }
 
-func (d Dictionary) Get(mot string) string {
+func (d Dictionary) Get(mot string) int {
 	return d[mot]
 }
 
@@ -25,26 +24,28 @@ func (d Dictionary) List() {
 		mots = append(mots, mot)
 	}
 
-	sort.Strings(mots)
-
 	for _, mot := range mots {
-		fmt.Printf("%s: %s\n", mot, d[mot])
+		fmt.Printf("%s: %d\n", mot, d[mot])
 	}
+}
+
+func (d Dictionary) List2() {
+
 }
 
 func main() {
 
 	dict := make(Dictionary)
 
-	dict.Add("valeur1", "essai")
-	dict.Add("valeur2", "essai2")
-	dict.Add("valeur3", "essai3")
+	dict.Add("v1", 1)
+	dict.Add("v2", 12)
+	dict.Add("v3", 123)
 
-	mot := "valeur2"
-	fmt.Printf("Definition of %s: %s\n", mot, dict.Get(mot))
+	mot := "v2"
+	fmt.Printf("Definition of %s: %d\n", mot, dict.Get(mot))
 
-	motToRemove := "valeur3"
-	fmt.Printf("enlever %s du dictionnaire...\n", motToRemove)
+	motToRemove := "v3"
+	fmt.Printf("enlever %s du dictionaire...\n", motToRemove)
 	dict.Remove(motToRemove)
 
 	fmt.Println("\n Liste du Dictionnaire:")
