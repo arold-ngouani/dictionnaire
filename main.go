@@ -1,53 +1,31 @@
 package main
 
 import (
+	"dictionnaire/dictionary"
 	"fmt"
 )
 
-type Dictionary map[string]int
-
-func (d Dictionary) Add(mot string, valeur int) {
-	d[mot] = valeur
-}
-
-func (d Dictionary) Get(mot string) int {
-	return d[mot]
-}
-
-func (d Dictionary) Remove(mot string) {
-	delete(d, mot)
-}
-
-func (d Dictionary) List() {
-	var mots []string
-	for mot := range d {
-		mots = append(mots, mot)
-	}
-
-	for _, mot := range mots {
-		fmt.Printf("%s: %d\n", mot, d[mot])
-	}
-}
-
-func (d Dictionary) List2() {
-
-}
-
 func main() {
 
-	dict := make(Dictionary)
+	dict := make(dictionary.Dictionary)
 
-	dict.Add("v1", 1)
-	dict.Add("v2", 12)
-	dict.Add("v3", 123)
+	dict.Add("v1", "premiere valeur")
+	dict.Add("v2", "seconde valeur")
+	dict.Add("v3", "troisieme valeur")
 
 	mot := "v2"
-	fmt.Printf("Definition of %s: %d\n", mot, dict.Get(mot))
+	definition := dict.Get(mot)
+	if definition != "" {
+		fmt.Printf("La définition de '%s' est : %s\n", mot, definition)
+	} else {
+		fmt.Printf("Le mot '%s' n'a pas été trouvé dans le dictionnaire.\n", mot)
+	}
+	fmt.Printf("Definition de %s: %s\n", mot, dict.Get(mot))
 
 	motToRemove := "v3"
-	fmt.Printf("enlever %s du dictionaire...\n", motToRemove)
+	fmt.Printf("%s a été enlever du dictionaire...\n", motToRemove)
 	dict.Remove(motToRemove)
 
-	fmt.Println("\n Liste du Dictionnaire:")
+	fmt.Println("\nListe des mots et de leurs définitions: ")
 	dict.List()
 }
