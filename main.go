@@ -3,66 +3,45 @@ package main
 import (
 	"dictionnaire/dictionary"
 	"fmt"
-	"time"
+	"net/http"
+	"os"
 )
 
 func main() {
-
-	dict := dictionary.New()
+	// dict, err := dictionary.LoadDictionaryFromFile()
 	// if err != nil {
-	// 	fmt.Println("Erreur lors du chargement du dictionaire : ", err)
-	// 	return
+	// 	dict = dictionary.New()
+	// 	fmt.Println("Le fichier dictionary.json n'existe pas ou est invalide. Création d'un nouveau dictionnaire.")
 	// }
+	_, err := os.Stat("dictionary.json")
+    var dict *dictionary.Dictionary
 
-	// dict.Add("v1", "premiere valeur")
-	// if err != nil {
-	// 	fmt.Println("Erreur lors de l'ajout au dictionnaire :", err)
-	// }
-	// dict.Add("v2", "seconde valeur")
-	// if err != nil {
-	// 	fmt.Println("Erreur lors de l'ajout au dictionnaire :", err)
-	// }
-	// dict.Add("v3", "troisieme valeur")
-	// if err != nil {
-	// 	fmt.Println("Erreur lors de l'ajout au dictionnaire :", err)
-	// }
+    if os.IsNotExist(err) {
+        // Le fichier dictionary.json n'existe pas, créer un nouveau dictionnaire
+        dict = dictionary.New()
+        fmt.Println("Le fichier dictionary.json n'existe pas. Création d'un nouveau dictionnaire.")
 
-	go func() {
-		dict.Add("v1", "premiere valeur")
-		time.Sleep(1 * time.Second)
-		// dict.Remove("v1")
-	}()
+        // Enregistrez le nouveau dictionnaire dans dictionary.json
+        if err := dict.SaveToFile(); err != nil {
+            fmt.Println("Erreur lors de la création du fichier dictionary.json:", err)
+            return
+        }
+    } else {
+        // Le fichier dictionary.json existe, chargez les données
+        dict, err = dictionary.LoadDictionaryFromFile()
+        if err != nil {
+            // Gérer l'erreur de chargement du fichier
+            dict = dictionary.New()
+            fmt.Println("Le fichier dictionary.json est invalide. Création d'un nouveau dictionnaire.")
+        }
+    }
 
-	go func() {
-		dict.Add("v2", "seconde valeur")
-		time.Sleep(2 * time.Second)
-		// dict.Remove("v2")
-	}()
+    http.HandleFunc("/add", dict.AddHandler)
+    http.HandleFunc("/get", dict.GetHandler)
+    http.HandleFunc("/remove", dict.RemoveHandler)
+    http.HandleFunc("/list", dict.ListHandler)
 
-	go func() {
-		dict.Add("v3", "troisieme valeur")
-		time.Sleep(3 * time.Second)
-		dict.Remove("v3")
-	}()
-
-	// mot := "v2"
-	// definition, err := dict.Get(mot)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// } else {
-	// 	fmt.Printf("La définition de '%s' est : %s\n", mot, definition)
-	// }
-
-	time.Sleep(5 * time.Second)
-
-	// motToRemove := "v3"
-	// fmt.Printf("%s a été enlever du dictionaire...\n", motToRemove)
-	// err = dict.Remove(motToRemove)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	fmt.Println("\nListe des mots et de leurs définitions: ")
-	dict.List()
+    fmt.Println("Serveur démarré sur le port 8080")
+    http.ListenAndServe(":8080", nil)
 
 }

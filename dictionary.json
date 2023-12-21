@@ -1,12 +1,8 @@
 {
   "entries": [
     {
-      "mot": "v1",
-      "definition": "premiere valeur"
-    },
-    {
-      "mot": "v2",
-      "definition": "seconde valeur"
+      "mot": "exemple2",
+      "definition": "ceci est un exemple2"
     }
   ]
 }
